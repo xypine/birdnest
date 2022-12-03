@@ -1,37 +1,26 @@
 import type { Result } from "$lib/utils";
-import { parseStringPromise } from "xml2js";
 
-
-export type Drone = {
-    serialNumber: string;
-    model: string;
-    manufacturer: string;
-    mac: string;
-    ipv4: string;
-    ipv6: string;
-    firmware: string;
-    positionY: number;
-    positionX: number;
-    altitude: number;
-};
-export type DroneResponse = Result<Drone[]>;
-
-function extractDrones(doc: any): Drone[] {
-    let drones = doc.report.capture.drone;
-    return drones;
+export type Pilot = {
+    pilot_id: string,
+    first_name: string,
+    last_name: string,
+    phone_number: string,
+    created_date: Date,
+    email: string
 }
-
-export async function getDrones(): Promise<DroneResponse> {
+export type Infringement = {
+    drone_serial_number: string,
+    distance: number,
+    updated_at: Date
+};
+export async function getInfringements(): Promise<Result<Infringement[]>> {
     try {
-    let resp = await fetch("http://assignments.reaktor.com/birdnest/drones");
+    let resp = await fetch("https://birdnest-api.eliaseskelinen.fi/");
     if(resp.ok) {
-        let doc = await parseStringPromise(await resp.text(), {
-            explicitArray: false
-        });
-        let drones = extractDrones(doc);
+        let json = await resp.json();
         return {
             ok: true,
-            value: drones
+            value: json.infringements
         };
     }
     return {

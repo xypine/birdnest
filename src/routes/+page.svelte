@@ -5,6 +5,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
+	import { getDroneColorHue } from '$lib/utils';
 
 	export let data: PageData;
 	function rerunLoadFunction() {
@@ -30,7 +31,7 @@
 
 <main>
 	{#if data.ok}
-		{@const drones = data.value}
+		{@const drones = data.value.sort((a, b) => a.distance - b.distance)}
 		<div class="map-container">
 			<div class="settings">
 				<label for="interval">update every</label>
@@ -38,32 +39,36 @@
 					<option value="0">0 seconds</option>
 					<option value="1000">1 seconds</option>
 					<option selected value="2000">2 seconds</option>
+					<option selected value="5000">5 seconds</option>
 					<option value="30000">30 seconds</option>
 				</select>
 			</div>
 			<Map {drones} />
 		</div>
 		<div class="data">
-			<h1>List of drones</h1>
+			<h2>List of infringing drones</h2>
 			<div class="drone">
 				<div class="drone-color-marker" />
 				<p>Distance (m)</p>
-				<p>Name</p>
+				<p>Pilot Name</p>
 				<p>Phone number</p>
 			</div>
 			<div class="drone-names">
 				{#each drones as drone, index (drone.drone_serial_number)}
-					{@const updated_at = new Date(drone.updated_at)}
+					{@const updated_at = drone.updated_at}
+					{@const min10 = 60000 * 10}
+					{@const eta = new Date(updated_at.getTime() + min10)}
+					{@const time_left = eta.getTime() - new Date().getTime()}
+					{@const time_left_part = 1.0 - time_left / min10}
 					{@const distance_meters = drone.distance / 1000.0}
-					{@const pie = 270 / 100.0}
-					{@const color = `--color:hsl(${pie * distance_meters}, 50%, 50%);`}
+					{@const color = `--color:hsl(${getDroneColorHue(drone, drones.length)}, 50%, 50%);`}
 					<div class="drone" in:slide={{ delay: index * 2 }} out:slide style={color}>
 						<div class="drone-color-marker" />
 						<p>{Math.round(distance_meters)}</p>
 						<p>{drone.pilot.first_name} {drone.pilot.last_name}</p>
 						<p>{drone.pilot.phone_number}</p>
 					</div>
-					<div class="time-bar" style={color} />
+					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
 				{/each}
 			</div>
 		</div>
@@ -94,9 +99,11 @@
 		gap: 1em;
 	}
 	.time-bar {
+		transition: 500ms all;
 		height: 2px;
 		width: 100%;
 		background-color: var(--color);
+		transform: translateX(calc(var(--time) * -100%));
 	}
 	.drone-names {
 		max-height: 100%;
@@ -107,10 +114,16 @@
 	}
 	.drone > * {
 		flex: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	.drone-color-marker {
 		flex: inherit;
 		width: 10px;
 		background-color: var(--color);
+	}
+	.settings {
+		padding: 0.3em 0.5em;
 	}
 </style>

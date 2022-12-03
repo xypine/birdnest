@@ -10,7 +10,7 @@
 	<h1>Birdnest</h1>
 	<noscript><span class="warn">The data won't update with javascript disabled</span></noscript>
 	<div class="filler" />
-	<p>Made by <a href="https://eliaseskelinen.fi">elias eskelinen</a></p>
+	<p>made by <a href="https://eliaseskelinen.fi">elias eskelinen</a></p>
 </div>
 
 <slot />

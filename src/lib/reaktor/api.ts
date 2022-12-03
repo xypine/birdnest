@@ -1,4 +1,4 @@
-import type { Result } from "$lib/utils";
+import { convertDate, type Result } from "$lib/utils";
 
 export type Pilot = {
     pilot_id: string,
@@ -16,14 +16,24 @@ export type Infringement = {
     pilot: Pilot,
     updated_at: Date
 };
+
+function convertDates(inp: Infringement[]) {
+    for(let i of inp) {
+        i.updated_at = convertDate(i.updated_at);
+        i.pilot.created_date = convertDate(i.pilot.created_date)
+    }
+}
+
 export async function getInfringements(): Promise<Result<Infringement[]>> {
     try {
     let resp = await fetch("https://birdnest-api.eliaseskelinen.fi/");
     if(resp.ok) {
         let json = await resp.json();
+        let data = json.infringements;
+        convertDates(data);
         return {
             ok: true,
-            value: json.infringements
+            value: data
         };
     }
     return {

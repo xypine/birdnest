@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import type { Infringement } from '$lib/reaktor/api';
+	import { getDroneColorHue } from '$lib/utils';
 
 	export let drones: Infringement[];
 	let pulse_key = {};
@@ -16,15 +17,13 @@
 		<div class="scan" />
 	{/key}
 	{#each drones as i, index (i.drone_serial_number)}
-		{@const pie = 270 / 100.0}
-		{@const distance_meters = i.distance / 1000.0}
 		{@const x = i.x / 1000.0}
 		{@const y = i.y / 1000.0}
 		<div
 			in:scale={{ delay: index * 2 }}
 			out:scale
 			class="drone"
-			style="--x:{x}px;--y:{y}px;--c:{pie * distance_meters};"
+			style="--x:{x}px;--y:{y}px;--c:{getDroneColorHue(i, drones.length)};"
 		/>
 	{/each}
 </main>

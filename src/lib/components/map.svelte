@@ -1,17 +1,31 @@
 <script lang="ts">
+	import { scale } from 'svelte/transition';
 	import type { Infringement } from '$lib/reaktor/api';
 
 	export let drones: Infringement[];
+	let pulse_key = {};
+	$: if (drones != null) {
+		// Runs every time drones is updated
+		pulse_key = {}; // Every {} is unique, this resets the "scan" div
+	}
 </script>
 
 <main>
 	<div class="dnz" />
-	{#each drones as i, index}
-		{@const pie = (Math.PI * 2.0) / drones.length}
-		{@const d = i.distance / 1000.0}
-		{@const x = Math.sin(pie * index) * d}
-		{@const y = Math.cos(pie * index) * d}
-		<div class="drone" style="--x:{x}px;--y:{y}px;" />
+	{#key pulse_key}
+		<div class="scan" />
+	{/key}
+	{#each drones as i, index (i.drone_serial_number)}
+		{@const pie = 270 / 100.0}
+		{@const distance_meters = i.distance / 1000.0}
+		{@const x = i.x / 1000.0}
+		{@const y = i.y / 1000.0}
+		<div
+			in:scale={{ delay: index * 2 }}
+			out:scale
+			class="drone"
+			style="--x:{x}px;--y:{y}px;--c:{pie * distance_meters};"
+		/>
 	{/each}
 </main>
 
@@ -23,30 +37,59 @@
 		--cty: calc(var(--h) / 2);
 		width: var(--w);
 		height: var(--h);
-		background-color: black;
 		position: relative;
 	}
 	.drone {
+		--drone-size: 12px;
+		--drone-size-half: calc(var(--drone-size) / 2);
+
 		transition: 500ms all;
 		border-radius: 999px;
-		background-color: red;
-		width: 12px;
-		height: 12px;
+		background-color: hsl(var(--c), 50%, 50%);
+		width: var(--drone-size);
+		height: var(--drone-size);
 		position: absolute;
 
-		top: calc(var(--cty) + var(--y));
-		left: calc(var(--ctx) + var(--x));
+		top: calc(var(--y) - var(--drone-size-half));
+		left: calc(var(--x) - var(--drone-size-half));
 	}
 	.dnz {
 		position: absolute;
 		background-color: blue;
-		opacity: 0.5;
+		opacity: 0.25;
 
-		top: calc(var(--cty) - 50px);
-		left: calc(var(--ctx) - 50px);
+		top: calc(var(--cty) - 100px);
+		left: calc(var(--ctx) - 100px);
 
-		width: 100px;
-		height: 100px;
+		width: 200px;
+		height: 200px;
+		border-radius: 999px;
+	}
+	@keyframes pulse {
+		0% {
+			scale: 0;
+			opacity: 0;
+		}
+		25% {
+			scale: 1;
+			opacity: 1;
+		}
+		100% {
+			scale: 1;
+			opacity: 0;
+		}
+	}
+	.scan {
+		animation: pulse 2s forwards;
+		position: absolute;
+		background: radial-gradient(circle, transparent 0%, blue 100%);
+		opacity: 0.25;
+
+		top: calc(var(--cty) - 100px);
+		left: calc(var(--ctx) - 100px);
+
+		width: 200px;
+		height: 200px;
 		border-radius: 999px;
 	}
 </style>

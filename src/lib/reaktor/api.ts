@@ -11,6 +11,9 @@ export type Pilot = {
 export type Infringement = {
     drone_serial_number: string,
     distance: number,
+    x: number,
+    y: number,
+    pilot: Pilot,
     updated_at: Date
 };
 export async function getInfringements(): Promise<Result<Infringement[]>> {

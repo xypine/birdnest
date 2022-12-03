@@ -1,9 +1,10 @@
 
 
 body {
+    color-scheme: dark;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-0);
-    color: var(--fg);
+    color: var(--fg-0);
 }
 
 h1, h2, h3, h4, h5, h6 {

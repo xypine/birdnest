@@ -2,12 +2,13 @@
 	import { browser } from '$app/environment';
 	import { invalidateAll } from '$app/navigation';
 	import Map from '$lib/components/map.svelte';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
-	import { getDroneColorHue } from '$lib/utils';
+	import { getDroneColorHue, getDroneTimeLeftPercentage } from '$lib/utils';
 
 	export let data: PageData;
+	let map_size = 500;
 	function rerunLoadFunction() {
 		invalidateAll();
 	}
@@ -32,7 +33,38 @@
 <main>
 	{#if data.ok}
 		{@const drones = data.value.sort((a, b) => a.distance - b.distance)}
-		<div class="map-container">
+
+		<div class="data">
+			<h2>List of infringing drones</h2>
+			<div class="drone label">
+				<div class="drone-color-marker" />
+				<p>Closest Distance (m)</p>
+				<p>Pilot Name</p>
+				<p>Phone number</p>
+			</div>
+			<div class="drone-names">
+				{#each drones as drone, index (drone.drone_serial_number)}
+					{@const updated_at = drone.updated_at}
+					{@const time_left_part = getDroneTimeLeftPercentage(updated_at, new Date())}
+					{@const distance_meters = drone.distance / 1000.0}
+					{@const color = `--color:hsl(${getDroneColorHue(drone, drones.length)}, 50%, 50%);`}
+					<div
+						class="drone"
+						id={drone.drone_serial_number}
+						in:slide={{ delay: index * 2 }}
+						out:slide
+						style={color}
+					>
+						<div class="drone-color-marker" />
+						<p>{Math.round(distance_meters)}</p>
+						<p>{drone.pilot.first_name} {drone.pilot.last_name}</p>
+						<p>{drone.pilot.phone_number}</p>
+					</div>
+					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
+				{/each}
+			</div>
+		</div>
+		<div class="map-container" bind:clientWidth={map_size} style="--mapcheight:{map_size}px;">
 			<div class="settings">
 				<label for="interval">update every</label>
 				<select id="interval" bind:value={chosen_interval}>
@@ -43,34 +75,7 @@
 					<option value="30000">30 seconds</option>
 				</select>
 			</div>
-			<Map {drones} />
-		</div>
-		<div class="data">
-			<h2>List of infringing drones</h2>
-			<div class="drone">
-				<div class="drone-color-marker" />
-				<p>Distance (m)</p>
-				<p>Pilot Name</p>
-				<p>Phone number</p>
-			</div>
-			<div class="drone-names">
-				{#each drones as drone, index (drone.drone_serial_number)}
-					{@const updated_at = drone.updated_at}
-					{@const min10 = 60000 * 10}
-					{@const eta = new Date(updated_at.getTime() + min10)}
-					{@const time_left = eta.getTime() - new Date().getTime()}
-					{@const time_left_part = 1.0 - time_left / min10}
-					{@const distance_meters = drone.distance / 1000.0}
-					{@const color = `--color:hsl(${getDroneColorHue(drone, drones.length)}, 50%, 50%);`}
-					<div class="drone" in:slide={{ delay: index * 2 }} out:slide style={color}>
-						<div class="drone-color-marker" />
-						<p>{Math.round(distance_meters)}</p>
-						<p>{drone.pilot.first_name} {drone.pilot.last_name}</p>
-						<p>{drone.pilot.phone_number}</p>
-					</div>
-					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
-				{/each}
-			</div>
+			<Map {drones} size={map_size} />
 		</div>
 	{:else}
 		<h1>Error: {JSON.stringify(data.error)}</h1>
@@ -82,13 +87,18 @@
 		min-height: var(--content-height);
 
 		display: flex;
+		flex-wrap: wrap;
 
 		gap: 1em;
 	}
 	.map-container {
+		min-width: min(500px, 100vw);
+		min-height: var(--mapcheight);
 		background-color: black;
 		display: flex;
 		flex-direction: column;
+
+		flex: 1;
 	}
 	.data {
 		flex: 1;
@@ -111,6 +121,15 @@
 	}
 	.drone {
 		display: flex;
+		gap: 1em;
+		border-top: 1px solid var(--bg-1);
+	}
+	.label {
+		border-top: none;
+	}
+	.drone:target {
+		background-color: var(--color);
+		color: var(--bg-0);
 	}
 	.drone > * {
 		flex: 1;
@@ -125,5 +144,7 @@
 	}
 	.settings {
 		padding: 0.3em 0.5em;
+		position: absolute;
+		z-index: 1;
 	}
 </style>

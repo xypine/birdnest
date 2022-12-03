@@ -16,3 +16,15 @@ export function getDroneColorHue(i: Infringement, numInfringements: number) {
     let distance_meters = i.distance / 1000.0
     return gradient * distance_meters;
 }
+
+const MAX_TIME = 60000 * 10; // 10 minutes
+export function getDroneTimeLeft(updated_at: Date, now: Date) {
+    let eta = new Date(updated_at.getTime() + MAX_TIME);
+    let time_left = eta.getTime() - new Date().getTime();
+    return time_left;
+}
+
+export function getDroneTimeLeftPercentage(updated_at: Date, now: Date) {
+    let time_left = getDroneTimeLeft(updated_at, now);
+    return 1.0 - time_left / MAX_TIME;
+}

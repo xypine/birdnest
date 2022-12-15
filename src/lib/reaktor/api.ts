@@ -1,4 +1,4 @@
-import { convertDate, type Result } from '$lib/utils';
+import { convertDate, type Result } from "$lib/utils";
 
 export type Pilot = {
 	pilot_id: string;
@@ -24,9 +24,10 @@ function convertDates(inp: Infringement[]) {
 	}
 }
 
-export async function getInfringements(fetch: any): Promise<Result<Infringement[]>> {
+export async function getInfringements(nfetch: any | null): Promise<Result<Infringement[]>> {
+	let fetch_to_use = nfetch ?? fetch;
 	try {
-		let resp = await fetch('https://birdnest-api.eliaseskelinen.fi/');
+		let resp = await fetch_to_use("https://birdnest-api.eliaseskelinen.fi/infringements");
 		if (resp.ok) {
 			let json = await resp.json();
 			let data = json.infringements;
@@ -43,7 +44,35 @@ export async function getInfringements(fetch: any): Promise<Result<Infringement[
 	} catch (e) {
 		return {
 			ok: false,
-			error: e
+			error: e as Error
+		};
+	}
+}
+
+export type DronesResponse = {
+	x: number[];
+	y: number[];
+	serial: number[];
+};
+export async function getDrones(nfetch: any | null): Promise<Result<DronesResponse>> {
+	let fetch_to_use = nfetch ?? fetch;
+	try {
+		let resp = await fetch_to_use("https://birdnest-api.eliaseskelinen.fi/drones");
+		if (resp.ok) {
+			let json = await resp.json();
+			return {
+				ok: true,
+				value: json
+			};
+		}
+		return {
+			ok: false,
+			error: new Error(resp.statusText)
+		};
+	} catch (e) {
+		return {
+			ok: false,
+			error: e as Error
 		};
 	}
 }

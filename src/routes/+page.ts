@@ -1,8 +1,12 @@
-import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
-import { getInfringements } from '$lib/reaktor/api';
+import { error } from "@sveltejs/kit";
+import type { PageLoad } from "./$types";
+import { getDrones, getInfringements } from "$lib/reaktor/api";
 
 export const load: PageLoad = async ({ params, fetch }) => {
-	let data = await getInfringements(fetch);
-	return data;
+	let infringements = await getInfringements(fetch);
+	let drones = await getDrones(fetch);
+	return {
+		infringements,
+		drones
+	};
 };

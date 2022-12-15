@@ -25,9 +25,6 @@
 	{#key pulse_key}
 		<div class="scan" />
 	{/key}
-	<div class="nest">
-		<div class="monadikuikka">>>=</div>
-	</div>
 	<div class="drones-container">
 		<div class="drones">
 			{#each drones as i, index (i.drone_serial_number)}
@@ -48,6 +45,9 @@
 			{/each}
 		</div>
 	</div>
+	<div class="nest">
+		<div class="monadikuikka">>>=</div>
+	</div>
 	<div class="guide">">>=" = monadikuikka in it's natural habitat</div>
 </main>
 
@@ -60,6 +60,10 @@
 		position: relative;
 
 		border: 2px solid var(--bg-1);
+
+		width: var(--w);
+		height: var(--h);
+		overflow: hidden;
 	}
 
 	.drones-container {
@@ -114,6 +118,8 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
+		/* Allow user to click drones */
+		pointer-events: none;
 
 		display: flex;
 		justify-content: center;
@@ -123,6 +129,11 @@
 		/* This is just a nice extra for those with the font installed, */
 		/* shipping the font would be a waste of bandwith */
 		font-family: "Fira Code";
+	}
+	.guide {
+		position: absolute;
+		bottom: 0;
+		left: 0;
 	}
 	@keyframes pulse {
 		0% {

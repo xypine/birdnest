@@ -31,8 +31,8 @@
 </script>
 
 <main>
-	{#if data.ok}
-		{@const drones = data.value.sort((a, b) => a.distance - b.distance)}
+	{#if data.infringements.ok}
+		{@const drones = data.infringements.value.sort((a, b) => a.distance - b.distance)}
 
 		<div class="data">
 			<h2>List of infringing drones</h2>

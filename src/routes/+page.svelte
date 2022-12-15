@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { invalidateAll } from '$app/navigation';
-	import Map from '$lib/components/map.svelte';
-	import { onDestroy } from 'svelte';
-	import { slide } from 'svelte/transition';
-	import type { PageData } from './$types';
-	import { getDroneColorHue, getDroneTimeLeftPercentage } from '$lib/utils';
+	import { browser } from "$app/environment";
+	import { invalidateAll } from "$app/navigation";
+	import Map from "$lib/components/map.svelte";
+	import { onDestroy } from "svelte";
+	import { slide } from "svelte/transition";
+	import type { PageData } from "./$types";
+	import { getDroneColorHue, getDroneTimeLeftPercentage } from "$lib/utils";
 
 	export let data: PageData;
-	let map_size = 500;
+	let map_size = "min(600px, 100vw)";
 	function rerunLoadFunction() {
 		invalidateAll();
 	}
 
 	let interval: any;
-	let chosen_interval = '2000';
+	let chosen_interval = "2000";
 	$: if (browser && chosen_interval != null) {
 		if (interval != null) {
 			clearInterval(interval);
@@ -37,10 +37,10 @@
 		<div class="data">
 			<h2>List of infringing drones</h2>
 			<div class="drone label">
-				<div class="drone-color-marker" />
-				<p>Closest Distance (m)</p>
-				<p>Pilot Name</p>
-				<p>Phone number</p>
+				<p>Pilot</p>
+				<p>Phone</p>
+				<p>Email</p>
+				<p style="flex: 0;">Closest Distance</p>
 			</div>
 			<div class="drone-names">
 				{#each drones as drone, index (drone.drone_serial_number)}
@@ -55,20 +55,20 @@
 						out:slide
 						style={color}
 					>
-						<div class="drone-color-marker" />
-						<p>{Math.round(distance_meters)}</p>
 						<p>{drone.pilot.first_name} {drone.pilot.last_name}</p>
 						<p>{drone.pilot.phone_number}</p>
+						<p>{drone.pilot.email}</p>
+						<p class="distance">{Math.round(distance_meters)}m</p>
 					</div>
 					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
 				{/each}
 			</div>
 		</div>
-		<div class="map-container" bind:clientWidth={map_size} style="--mapcheight:{map_size}px;">
+		<div class="map-container" style="--mapsize:{map_size};">
 			<div class="settings">
 				<label for="interval">update every</label>
 				<select id="interval" bind:value={chosen_interval}>
-					<option value="0">0 seconds</option>
+					<option value="0">0 seconds (pause)</option>
 					<option value="1000">1 seconds</option>
 					<option selected value="2000">2 seconds</option>
 					<option selected value="5000">5 seconds</option>
@@ -92,13 +92,11 @@
 		gap: 1em;
 	}
 	.map-container {
-		min-width: min(500px, 100vw);
-		min-height: var(--mapcheight);
+		min-width: var(--mapsize);
+		min-height: var(--mapsize);
 		background-color: black;
 		display: flex;
 		flex-direction: column;
-
-		flex: 1;
 	}
 	.data {
 		flex: 1;
@@ -112,7 +110,9 @@
 		transition: 500ms all;
 		height: 2px;
 		width: 100%;
-		background-color: var(--color);
+		background-color: var(--fg-0);
+		opacity: 0.5;
+		/* background-color: var(--color); */
 		transform: translateX(calc(var(--time) * -100%));
 	}
 	.drone-names {
@@ -127,7 +127,8 @@
 	.label {
 		border-top: none;
 	}
-	.drone:target {
+	.drone:target,
+	.drone:target > .distance {
 		background-color: var(--color);
 		color: var(--bg-0);
 	}
@@ -136,6 +137,11 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		text-align: center;
+	}
+	.distance {
+		color: var(--color);
+		flex: 0;
 	}
 	.drone-color-marker {
 		flex: inherit;

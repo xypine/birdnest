@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.css';
+	import "../app.css";
 </script>
 
 <svelte:head>
@@ -8,7 +8,10 @@
 
 <div class="header">
 	<h1>Birdnest</h1>
-	<noscript><span class="warn">The data won't update with javascript disabled</span></noscript>
+	<noscript
+		><span class="warn">The data won't update automatically with javascript disabled</span
+		></noscript
+	>
 	<div class="filler" />
 	<p>made by <a href="https://eliaseskelinen.fi">elias eskelinen</a></p>
 </div>

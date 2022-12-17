@@ -7,7 +7,7 @@
 </svelte:head>
 
 <div class="header">
-	<h1>Birdnest</h1>
+	<h1><a href="/">Birdnest</a></h1>
 	<noscript
 		><span class="warn">The data won't update automatically with javascript disabled</span
 		></noscript
@@ -33,6 +33,16 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5em;
+	}
+	.header > h1 > a {
+		text-decoration: none;
+		color: inherit;
+	}
+	.header > p {
+		text-align: center;
+	}
+	.header > p > a {
+		white-space: nowrap;
 	}
 	.filler {
 		flex: 1;

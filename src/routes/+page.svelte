@@ -6,6 +6,7 @@
 	import { slide } from "svelte/transition";
 	import type { PageData } from "./$types";
 	import { getDroneColorHue, getDroneTimeLeftPercentage } from "$lib/utils";
+	import config from "$lib/config";
 
 	export let data: PageData;
 	let map_size = "min(600px, 100vw)";
@@ -14,13 +15,12 @@
 	}
 
 	let interval: any;
-	let chosen_interval = "2000";
-	$: if (browser && chosen_interval != null) {
+	$: if (browser && $config.interval != null) {
 		if (interval != null) {
 			clearInterval(interval);
 		}
-		if (+chosen_interval !== 0) {
-			interval = setInterval(rerunLoadFunction, +chosen_interval);
+		if ($config.interval !== 0) {
+			interval = setInterval(rerunLoadFunction, $config.interval);
 		}
 	}
 	onDestroy(() => {
@@ -52,7 +52,8 @@
 						drone,
 						infringements.length
 					)}, 50%, 50%);`}
-					<div
+					<a
+						href={`/infringer/${drone.pilot.pilot_id}`}
 						class="drone"
 						id={drone.drone_serial_number}
 						in:slide={{ delay: index * 2 }}
@@ -63,7 +64,7 @@
 						<p>{drone.pilot.phone_number}</p>
 						<p>{drone.pilot.email}</p>
 						<p class="distance">{Math.round(distance_meters)}m</p>
-					</div>
+					</a>
 					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
 				{/each}
 			</div>
@@ -72,16 +73,23 @@
 			<div class="settings">
 				{#if browser}
 					<label for="interval">update every</label>
-					<select id="interval" bind:value={chosen_interval}>
-						<option value="0">0 seconds (pause)</option>
-						<option value="1000">1 seconds</option>
-						<option selected value="2000">2 seconds</option>
-						<option selected value="5000">5 seconds</option>
-						<option value="30000">30 seconds</option>
+					<select id="interval" bind:value={$config.interval}>
+						<option value={0}>0 seconds (pause)</option>
+						<option selected value={2000}>2 seconds</option>
+						<option selected value={4000}>4 seconds</option>
+						<option value={16000}>16 seconds</option>
 					</select>
+					<label for="enable_animations">enable animations</label>
+					<input type="checkbox" id="enable_animations" bind:checked={$config.enable_animations} />
 				{/if}
 			</div>
-			<Map {infringements} {drones} size={map_size} />
+			<Map
+				{infringements}
+				{drones}
+				enable_animations={$config.enable_animations}
+				update_interval={$config.interval}
+				size={map_size}
+			/>
 		</div>
 	{:else}
 		{#if data.infringements.error}
@@ -133,6 +141,9 @@
 		display: flex;
 		gap: 1em;
 		border-top: 1px solid var(--bg-1);
+
+		text-decoration: none;
+		color: inherit;
 	}
 	.label {
 		border-top: none;

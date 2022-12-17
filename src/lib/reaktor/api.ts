@@ -26,7 +26,7 @@ function convertDates(inp: Infringement[]) {
 
 let last_updated = new Date(0, 0, 0, 0);
 let last_infringements: Infringement[] = [];
-export async function getInfringements(nfetch: any | null): Promise<Result<Infringement[]>> {
+export async function getInfringements(nfetch: any | null): Promise<Result<Infringement[], Error>> {
 	let fetch_to_use = nfetch ?? fetch;
 	let date_requested = new Date();
 	try {
@@ -71,7 +71,7 @@ export type DronesResponse = {
 	y: number[];
 	serials: number[];
 };
-export async function getDrones(nfetch: any | null): Promise<Result<DronesResponse>> {
+export async function getDrones(nfetch: any | null): Promise<Result<DronesResponse, Error>> {
 	let fetch_to_use = nfetch ?? fetch;
 	try {
 		let resp = await fetch_to_use("https://birdnest-api.eliaseskelinen.fi/drones");

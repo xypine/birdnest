@@ -6,16 +6,20 @@
 	export let infringements: Infringement[];
 	export let drones: DronesResponse;
 	export let size: string;
+	export let enable_animations = false;
+	export let update_interval: number;
 	let pulse_key = {};
-	$: if (infringements != null) {
-		// Runs every time infringements is updated
-		pulse_key = {}; // Every {} is unique, this resets the "scan" div
+
+	// Runs every time infringements is updated
+	$: if (infringements != null && enable_animations) {
+		// Every {} is unique, so this recreates the "scan" div and reruns the scan animation
+		pulse_key = {};
 	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <main
-	style="--map-size:{size};"
+	style="--map-size:{size};--drone-animation-time:{enable_animations ? update_interval + 50 : 0}ms;"
 	on:click={() => {
 		// Reset page target
 		window.location.href = window.location.pathname + "#";
@@ -101,7 +105,7 @@
 		--drone-size: 4px;
 		--drone-size-half: calc(var(--drone-size) / 2);
 
-		transition: 500ms all;
+		transition: var(--drone-animation-time) all linear;
 		background-color: var(--fg-0);
 
 		width: var(--drone-size);

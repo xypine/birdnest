@@ -1,5 +1,7 @@
 <script lang="ts">
+	import PageTransition from "$lib/components/PageTransition.svelte";
 	import "../app.css";
+	import { page } from "$app/stores";
 </script>
 
 <div class="header">
@@ -11,7 +13,9 @@
 	<p>made by <a href="https://eliaseskelinen.fi">elias eskelinen</a></p>
 </div>
 
-<slot />
+<PageTransition refresh={$page.url.pathname}>
+	<slot />
+</PageTransition>
 
 <style>
 	:root {

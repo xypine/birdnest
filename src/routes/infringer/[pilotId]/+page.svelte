@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { invalidateAll } from "$app/navigation";
-	import Map from "$lib/components/map.svelte";
+	import Map from "$lib/components/Map.svelte";
 	import { getInfringementTimeLeft } from "$lib/utils";
 	import config from "$lib/config";
 	import { onDestroy, onMount } from "svelte";

@@ -39,8 +39,8 @@
 				{@const y = i.y / oldmax}
 				<a
 					href="#{i.drone_serial_number}"
-					in:scale
-					out:scale
+					in:scale|local
+					out:scale|local
 					class="drone infringement"
 					style="--x:{x};--y:{y};--c:{getInfringementColorHue(i, infringements.length)};--a:{1.0 -
 						getInfringementTimeLeftPercentage(i.updated_at, new Date())};"

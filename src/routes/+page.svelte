@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { invalidateAll } from "$app/navigation";
-	import Map from "$lib/components/map.svelte";
+	import Map from "$lib/components/Map.svelte";
 	import { onDestroy } from "svelte";
 	import { slide } from "svelte/transition";
 	import type { LayoutData } from "./$types";
@@ -40,7 +40,9 @@
 		{@const drones = data.drones.value}
 
 		<div class="data">
-			<h2 style="text-align:center;">Pilots who have infringed the dnz in the last 10 minutes</h2>
+			<h2 style="text-align:center;">
+				{infringements.length} Pilots who have infringed the dnz in the last 10 minutes
+			</h2>
 			<div class="infringement label">
 				<p>Pilot</p>
 				<p>Phone</p>
@@ -95,12 +97,13 @@
 				size={map_size}
 			/>
 		</div>
-	{:else}
+	{:else if !data.infringements.ok}
 		{#if data.infringements.error}
-			<h1>Error: {JSON.stringify(data.infringements.error)}</h1>
+			<h1 class="error">Error fetching infringements: {data.infringements.error}</h1>
 		{/if}
+	{:else if !data.drones.ok}
 		{#if data.drones.error}
-			<h1>Error: {JSON.stringify(data.drones.error)}</h1>
+			<h1 class="error">Error fetching drones: {data.drones.error}</h1>
 		{/if}
 	{/if}
 </main>
@@ -113,6 +116,12 @@
 		flex-wrap: wrap;
 
 		gap: 1em;
+	}
+	.error {
+		flex: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	.map-container {
 		min-width: var(--mapsize);

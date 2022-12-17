@@ -85,7 +85,6 @@
 		width: var(--w);
 		height: var(--h);
 		overflow: hidden;
-		background: black;
 	}
 
 	.drones-container {

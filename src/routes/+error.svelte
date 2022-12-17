@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { page } from "$app/stores";
+	import { custom_error_key } from "$lib/utils";
 </script>
+
+<svelte:head>
+	<title>Error {$page.status}</title>
+</svelte:head>
 
 <main>
 	<h1>error {$page.status}</h1>
-	{#if $page.status == 404}
+	{#if $page.status == 404 && !$page.error?.message.startsWith(custom_error_key)}
 		<h2><code>{$page.url.pathname}</code> not found</h2>
 		<hr />
 		<p>maybe try one of these instead:</p>
@@ -12,7 +17,7 @@
 			<li><a href={$page.url.origin}>{$page.url.origin}</a></li>
 		</ul>
 	{:else}
-		<h2>{$page.error?.message}</h2>
+		<h2>{$page.error?.message.replaceAll(custom_error_key, "")}</h2>
 	{/if}
 </main>
 

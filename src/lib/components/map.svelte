@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { scale } from "svelte/transition";
 	import type { DronesResponse, Infringement } from "$lib/reaktor/api";
-	import { getDroneColorHue, getDroneTimeLeftPercentage } from "$lib/utils";
+	import { getInfringementColorHue, getInfringementTimeLeftPercentage } from "$lib/utils";
 
 	export let infringements: Infringement[];
 	export let drones: DronesResponse;
@@ -27,7 +27,7 @@
 	}}
 >
 	<div class="dnz" />
-	{#key pulse_key}
+	{#key pulse_key && enable_animations}
 		<div class="scan" />
 	{/key}
 	<div class="drones-container">
@@ -42,8 +42,8 @@
 					in:scale
 					out:scale
 					class="drone infringement"
-					style="--x:{x};--y:{y};--c:{getDroneColorHue(i, infringements.length)};--a:{1.0 -
-						getDroneTimeLeftPercentage(i.updated_at, new Date())};"
+					style="--x:{x};--y:{y};--c:{getInfringementColorHue(i, infringements.length)};--a:{1.0 -
+						getInfringementTimeLeftPercentage(i.updated_at, new Date())};"
 				>
 					<div />
 				</a>
@@ -58,8 +58,8 @@
 					{#key serial}
 						<a
 							href="#{serial}"
-							in:scale
-							out:scale
+							in:scale|local
+							out:scale|local
 							class="drone"
 							style="--x:{x};--y:{y};--c:{0};--a:{1.0};"
 						>

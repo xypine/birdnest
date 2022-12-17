@@ -2,15 +2,10 @@
 	import "../app.css";
 </script>
 
-<svelte:head>
-	<title>Birdnest</title>
-</svelte:head>
-
 <div class="header">
 	<h1><a href="/">Birdnest</a></h1>
 	<noscript
-		><span class="warn">The data won't update automatically with javascript disabled</span
-		></noscript
+		><span class="warn">Data won't update automatically with javascript disabled</span></noscript
 	>
 	<div class="filler" />
 	<p>made by <a href="https://eliaseskelinen.fi">elias eskelinen</a></p>

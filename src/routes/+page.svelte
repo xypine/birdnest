@@ -4,17 +4,17 @@
 	import Map from "$lib/components/map.svelte";
 	import { onDestroy } from "svelte";
 	import { slide } from "svelte/transition";
-	import type { PageData } from "./$types";
-	import { getDroneColorHue, getDroneTimeLeftPercentage } from "$lib/utils";
+	import type { LayoutData } from "./$types";
+	import { getInfringementColorHue, getInfringementTimeLeftPercentage } from "$lib/utils";
 	import config from "$lib/config";
 
-	export let data: PageData;
+	export let data: LayoutData;
 	let map_size = "min(600px, 100vw)";
 	function rerunLoadFunction() {
 		invalidateAll();
 	}
 
-	let interval: any;
+	let interval: ReturnType<typeof setInterval>;
 	$: if (browser && $config.interval != null) {
 		if (interval != null) {
 			clearInterval(interval);
@@ -30,39 +30,43 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Birdnest</title>
+</svelte:head>
+
 <main>
 	{#if data.infringements.ok && data.drones.ok}
 		{@const infringements = data.infringements.value.sort((a, b) => a.distance - b.distance)}
 		{@const drones = data.drones.value}
 
 		<div class="data">
-			<h2>List of infringing drones</h2>
-			<div class="drone label">
+			<h2 style="text-align:center;">Pilots who have infringed the dnz in the last 10 minutes</h2>
+			<div class="infringement label">
 				<p>Pilot</p>
 				<p>Phone</p>
 				<p>Email</p>
 				<p style="flex: 0;">Closest Distance</p>
 			</div>
-			<div class="drone-names">
-				{#each infringements as drone, index (drone.drone_serial_number)}
-					{@const updated_at = drone.updated_at}
-					{@const time_left_part = getDroneTimeLeftPercentage(updated_at, new Date())}
-					{@const distance_meters = drone.distance / 1000.0}
-					{@const color = `--color:hsl(${getDroneColorHue(
-						drone,
+			<div class="infringement-details">
+				{#each infringements as infringement, index (infringement.drone_serial_number)}
+					{@const updated_at = infringement.updated_at}
+					{@const time_left_part = getInfringementTimeLeftPercentage(updated_at, new Date())}
+					{@const distance_meters = infringement.distance / 1000.0}
+					{@const color = `--color:hsl(${getInfringementColorHue(
+						infringement,
 						infringements.length
 					)}, 50%, 50%);`}
 					<a
-						href={`/infringer/${drone.pilot.pilot_id}`}
-						class="drone"
-						id={drone.drone_serial_number}
-						in:slide={{ delay: index * 2 }}
-						out:slide
+						href={`/infringer/${infringement.pilot.pilot_id}`}
+						class="infringement"
+						id={infringement.drone_serial_number}
+						in:slide|local={{ delay: index * 2 }}
+						out:slide|local
 						style={color}
 					>
-						<p>{drone.pilot.first_name} {drone.pilot.last_name}</p>
-						<p>{drone.pilot.phone_number}</p>
-						<p>{drone.pilot.email}</p>
+						<p>{infringement.pilot.first_name} {infringement.pilot.last_name}</p>
+						<p>{infringement.pilot.phone_number}</p>
+						<p>{infringement.pilot.email}</p>
 						<p class="distance">{Math.round(distance_meters)}m</p>
 					</a>
 					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
@@ -122,7 +126,6 @@
 
 		display: flex;
 		flex-direction: column;
-		gap: 1em;
 	}
 	.time-bar {
 		transition: 500ms all;
@@ -133,11 +136,11 @@
 		/* background-color: var(--color); */
 		transform: translateX(calc(var(--time) * -100%));
 	}
-	.drone-names {
+	.infringement-details {
 		max-height: 100%;
 		overflow-y: scroll;
 	}
-	.drone {
+	.infringement {
 		display: flex;
 		gap: 1em;
 		border-top: 1px solid var(--bg-1);
@@ -148,12 +151,12 @@
 	.label {
 		border-top: none;
 	}
-	.drone:target,
-	.drone:target > .distance {
+	.infringement:target,
+	.infringement:target > .distance {
 		background-color: var(--color);
 		color: var(--bg-0);
 	}
-	.drone > * {
+	.infringement > * {
 		flex: 1;
 		display: flex;
 		justify-content: center;
@@ -163,11 +166,6 @@
 	.distance {
 		color: var(--color);
 		flex: 0;
-	}
-	.drone-color-marker {
-		flex: inherit;
-		width: 10px;
-		background-color: var(--color);
 	}
 	.settings {
 		padding: 0.3em 0.5em;

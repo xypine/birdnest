@@ -1,4 +1,4 @@
-import { convertDate, getDroneTimeLeft, type Result } from "$lib/utils";
+import { convertDate, getInfringementTimeLeft, type Result } from "$lib/utils";
 
 export type Pilot = {
 	pilot_id: string;
@@ -42,7 +42,7 @@ export async function getInfringements(nfetch: any | null): Promise<Result<Infri
 				...last_infringements.filter(
 					(drone) =>
 						// Check that the infringement hasn't expired
-						getDroneTimeLeft(drone.updated_at, date_requested) > 0 &&
+						getInfringementTimeLeft(drone.updated_at, date_requested) > 0 &&
 						// Remove old infringements that are also present in the new data
 						// to prevent duplicates
 						!data.find((new_drone) => drone.drone_serial_number === new_drone.drone_serial_number)

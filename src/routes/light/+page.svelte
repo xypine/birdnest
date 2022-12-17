@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Content from "../+page.svelte";
-	import type { PageData } from "./$types";
-	export let data: PageData;
+	import type { LayoutData } from "../$types";
+	export let data: LayoutData;
 </script>
 
 <Content {data} />

@@ -31,8 +31,9 @@
 </script>
 
 <main>
-	{#if data.infringements.ok}
-		{@const drones = data.infringements.value.sort((a, b) => a.distance - b.distance)}
+	{#if data.infringements.ok && data.drones.ok}
+		{@const infringements = data.infringements.value.sort((a, b) => a.distance - b.distance)}
+		{@const drones = data.drones.value}
 
 		<div class="data">
 			<h2>List of infringing drones</h2>
@@ -43,11 +44,14 @@
 				<p style="flex: 0;">Closest Distance</p>
 			</div>
 			<div class="drone-names">
-				{#each drones as drone, index (drone.drone_serial_number)}
+				{#each infringements as drone, index (drone.drone_serial_number)}
 					{@const updated_at = drone.updated_at}
 					{@const time_left_part = getDroneTimeLeftPercentage(updated_at, new Date())}
 					{@const distance_meters = drone.distance / 1000.0}
-					{@const color = `--color:hsl(${getDroneColorHue(drone, drones.length)}, 50%, 50%);`}
+					{@const color = `--color:hsl(${getDroneColorHue(
+						drone,
+						infringements.length
+					)}, 50%, 50%);`}
 					<div
 						class="drone"
 						id={drone.drone_serial_number}
@@ -66,19 +70,26 @@
 		</div>
 		<div class="map-container" style="--mapsize:{map_size};">
 			<div class="settings">
-				<label for="interval">update every</label>
-				<select id="interval" bind:value={chosen_interval}>
-					<option value="0">0 seconds (pause)</option>
-					<option value="1000">1 seconds</option>
-					<option selected value="2000">2 seconds</option>
-					<option selected value="5000">5 seconds</option>
-					<option value="30000">30 seconds</option>
-				</select>
+				{#if browser}
+					<label for="interval">update every</label>
+					<select id="interval" bind:value={chosen_interval}>
+						<option value="0">0 seconds (pause)</option>
+						<option value="1000">1 seconds</option>
+						<option selected value="2000">2 seconds</option>
+						<option selected value="5000">5 seconds</option>
+						<option value="30000">30 seconds</option>
+					</select>
+				{/if}
 			</div>
-			<Map {drones} size={map_size} />
+			<Map {infringements} {drones} size={map_size} />
 		</div>
 	{:else}
-		<h1>Error: {JSON.stringify(data.error)}</h1>
+		{#if data.infringements.error}
+			<h1>Error: {JSON.stringify(data.infringements.error)}</h1>
+		{/if}
+		{#if data.drones.error}
+			<h1>Error: {JSON.stringify(data.drones.error)}</h1>
+		{/if}
 	{/if}
 </main>
 
@@ -94,7 +105,6 @@
 	.map-container {
 		min-width: var(--mapsize);
 		min-height: var(--mapsize);
-		background-color: black;
 		display: flex;
 		flex-direction: column;
 	}

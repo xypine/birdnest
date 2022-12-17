@@ -1,12 +1,27 @@
+:root {
+	--bg-0: #222222;
+	--bg-1: #2c2c2c;
+	--bg-2: #999;
 
-
-body {
-    color-scheme: dark;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-0);
-    color: var(--fg-0);
+	--fg-0: #eee;
+	--fg-1: #fff;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: inherit;
+html {
+	color-scheme: dark;
+}
+
+body {
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	background-color: var(--bg-0);
+	color: var(--fg-0);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: inherit;
 }

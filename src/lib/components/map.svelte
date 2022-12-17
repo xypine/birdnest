@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { scale } from "svelte/transition";
-	import type { Infringement } from "$lib/reaktor/api";
+	import type { DronesResponse, Infringement } from "$lib/reaktor/api";
 	import { getDroneColorHue, getDroneTimeLeftPercentage } from "$lib/utils";
 
-	export let drones: Infringement[];
+	export let infringements: Infringement[];
+	export let drones: DronesResponse;
 	export let size: string;
 	let pulse_key = {};
-	$: if (drones != null) {
-		// Runs every time drones is updated
+	$: if (infringements != null) {
+		// Runs every time infringements is updated
 		pulse_key = {}; // Every {} is unique, this resets the "scan" div
 	}
 </script>
@@ -27,7 +28,7 @@
 	{/key}
 	<div class="drones-container">
 		<div class="drones">
-			{#each drones as i, index (i.drone_serial_number)}
+			{#each infringements as i, index (i.drone_serial_number)}
 				<!-- Remap coordinates from 0-500_000 to 0-1 -->
 				{@const oldmax = 500_000.0}
 				{@const x = i.x / oldmax}
@@ -36,13 +37,33 @@
 					href="#{i.drone_serial_number}"
 					in:scale
 					out:scale
-					class="drone"
-					style="--x:{x};--y:{y};--c:{getDroneColorHue(i, drones.length)};--a:{1.0 -
+					class="drone infringement"
+					style="--x:{x};--y:{y};--c:{getDroneColorHue(i, infringements.length)};--a:{1.0 -
 						getDroneTimeLeftPercentage(i.updated_at, new Date())};"
 				>
 					<div />
 				</a>
 			{/each}
+
+			{#if drones.serials}
+				{#each drones.serials as serial, index (serial)}
+					<!-- Remap coordinates from 0-500_000 to 0-1 -->
+					{@const oldmax = 500_000.0}
+					{@const x = drones.x[index] / oldmax}
+					{@const y = drones.y[index] / oldmax}
+					{#key serial}
+						<a
+							href="#{serial}"
+							in:scale
+							out:scale
+							class="drone"
+							style="--x:{x};--y:{y};--c:{0};--a:{1.0};"
+						>
+							<div />
+						</a>
+					{/key}
+				{/each}
+			{/if}
 		</div>
 	</div>
 	<div class="nest">
@@ -64,6 +85,7 @@
 		width: var(--w);
 		height: var(--h);
 		overflow: hidden;
+		background: black;
 	}
 
 	.drones-container {
@@ -77,20 +99,25 @@
 		height: 100%;
 	}
 	.drone {
-		--drone-size: 8px;
+		--drone-size: 4px;
 		--drone-size-half: calc(var(--drone-size) / 2);
 
 		transition: 500ms all;
-		border-radius: 50%;
-		background-color: hsl(var(--c), 50%, 50%);
+		background-color: var(--fg-0);
 
 		width: var(--drone-size);
 		height: var(--drone-size);
+		border-radius: 50%;
 
 		position: absolute;
 
 		top: calc(var(--y) * var(--h) - var(--drone-size-half));
 		left: calc(var(--x) * var(--w) - var(--drone-size-half));
+	}
+	.infringement {
+		--drone-size: 8px;
+		--drone-size-half: calc(var(--drone-size) / 2);
+		background-color: hsl(var(--c), 50%, 50%);
 		opacity: max(calc(var(--a) * 10 - 9), 0.5);
 	}
 	.drone:target {

@@ -26,9 +26,11 @@
 		window.history.replaceState(null, "unused", window.location.pathname);
 	}}
 >
-	<div class="dnz" />
-	{#key pulse_key && enable_animations}
-		<div class="scan" />
+	<div class="ndz" />
+	{#key pulse_key}
+		{#if enable_animations}
+			<div class="scan" />
+		{/if}
 	{/key}
 	<div class="drones-container">
 		<div class="drones">
@@ -41,7 +43,7 @@
 					href="#{i.drone_serial_number}"
 					in:scale|local
 					out:scale|local
-					class="drone infringement"
+					class="drone tracked infringement"
 					style="--x:{x};--y:{y};--c:{getInfringementColorHue(i, infringements.length)};--a:{1.0 -
 						getInfringementTimeLeftPercentage(i.updated_at, new Date())};"
 				>
@@ -60,7 +62,7 @@
 							href="#{serial}"
 							in:scale|local
 							out:scale|local
-							class="drone"
+							class="drone tracked"
 							style="--x:{x};--y:{y};--c:{0};--a:{1.0};"
 						>
 							<div />
@@ -73,7 +75,21 @@
 	<div class="nest">
 		<div class="monadikuikka">>>=</div>
 	</div>
-	<div class="guide">">>=" = monadikuikka in it's natural habitat</div>
+	<div class="guide">
+		<div style="display: flex;">
+			<div style="width: 1em;display:grid;place-items:center;">
+				<div class="drone" />
+			</div>
+			= drone
+		</div>
+		<div style="display: flex;">
+			<div style="width: 1em;display:grid;place-items:center;">
+				<div class="drone infringement" style="--c:0;--a:1.0;" />
+			</div>
+			= closest observed position of an infringing drone
+		</div>
+		<p>">>=" = monadikuikka in it's natural habitat</p>
+	</div>
 </main>
 
 <style>
@@ -111,7 +127,8 @@
 		width: var(--drone-size);
 		height: var(--drone-size);
 		border-radius: 50%;
-
+	}
+	.drone.tracked {
 		position: absolute;
 
 		top: calc(var(--y) * var(--h) - var(--drone-size-half));
@@ -127,19 +144,19 @@
 		border: 0.5px solid var(--fg-0);
 		opacity: 1;
 	}
-	.dnz {
+	.ndz {
 		position: absolute;
 		border: 1px solid red;
 		opacity: 0.25;
 
-		--dnz-w: calc(var(--w) / 5);
-		--dnz-h: calc(var(--h) / 5);
+		--ndz-w: calc(var(--w) / 5);
+		--ndz-h: calc(var(--h) / 5);
 
-		top: calc(var(--h) / 2 - var(--dnz-h)); /* cty - cty = 0 */
-		left: calc(var(--w) / 2 - var(--dnz-w)); /* ctx - ctx = 0 */
+		top: calc(var(--h) / 2 - var(--ndz-h)); /* cty - cty = 0 */
+		left: calc(var(--w) / 2 - var(--ndz-w)); /* ctx - ctx = 0 */
 
-		width: calc(var(--dnz-w) * 2);
-		height: calc(var(--dnz-h) * 2);
+		width: calc(var(--ndz-w) * 2);
+		height: calc(var(--ndz-h) * 2);
 		border-radius: 50%;
 	}
 	.nest {
@@ -180,9 +197,12 @@
 		}
 	}
 	.scan {
-		animation: pulse 2s forwards;
+		animation: pulse 1.9s forwards;
 		position: absolute;
-		background: radial-gradient(circle, transparent 0%, green 100%);
+		/* A gradient background looks nice but adds too much visual noise */
+		/* Let's use a simple border instead */
+		/*background: radial-gradient(circle, transparent 0%, green 100%);*/
+		border: 1px solid green;
 		opacity: 0.25;
 
 		top: 0; /* cty - cty = 0 */

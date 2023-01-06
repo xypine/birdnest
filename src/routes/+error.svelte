@@ -8,7 +8,7 @@
 </svelte:head>
 
 <main>
-	<h1>error {$page.status}</h1>
+	<h1>Error {$page.status}</h1>
 	{#if $page.status == 404 && !$page.error?.message.startsWith(custom_error_key)}
 		<h2><code>{$page.url.pathname}</code> not found</h2>
 		<hr />

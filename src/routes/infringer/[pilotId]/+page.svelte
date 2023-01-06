@@ -69,18 +69,32 @@
 				This infringement will expire in {Math.round(time_left / 1000)} seconds
 			{:else}
 				<span style="color:orange;"
-					>This infringement has expired, it won't be available once you leave or reload this page</span
+					>This infringement has expired, it won't be available once you leave or reload the page</span
 				>
 			{/if}
 		</h3>
 	</div>
-	<Map
-		infringements={[details]}
-		drones={data.drones.value}
-		size="min(500px, 100vw)"
-		update_interval={2000}
-		enable_animations={false}
-	/>
+	{#if data.drones.ok}
+		{@const original = data.drones.value}
+		{@const indicies = Object.keys(original.serials)}
+		{@const enabled_indicies = indicies.filter(
+			(i) => original.serials[+i] === details.drone_serial_number
+		)}
+		{@const drones = {
+			serials: enabled_indicies.map((i) => original.serials[+i]),
+			x: enabled_indicies.map((i) => original.x[+i]),
+			y: enabled_indicies.map((i) => original.y[+i])
+		}}
+		<Map
+			infringements={[details]}
+			{drones}
+			size="min(500px, 100vw)"
+			update_interval={2000}
+			enable_animations={false}
+		/>
+	{:else}
+		<p>Error loading data: {data.drones.error}</p>
+	{/if}
 </main>
 
 <style>

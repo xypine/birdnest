@@ -31,13 +31,12 @@ export async function getInfringements(nfetch: any | null): Promise<Result<Infri
 	let date_requested = new Date();
 	try {
 		let resp = await fetch_to_use(
-			`https://birdnest-api.eliaseskelinen.fi/infringements?min_updated_at=${last_updated.getTime()}`
+			`https://birdnest-api.eliaseskelinen.fi/infringements?min_updated_at=${last_updated.toISOString()}`
 		);
 		if (resp.ok) {
 			let json = await resp.json();
 			let data: Infringement[] = json.infringements;
 			convertDates(data);
-			last_updated = date_requested;
 			last_infringements = [
 				...last_infringements.filter(
 					(drone) =>
@@ -49,6 +48,7 @@ export async function getInfringements(nfetch: any | null): Promise<Result<Infri
 				),
 				...data
 			];
+			last_updated = date_requested;
 			return {
 				ok: true,
 				value: last_infringements
@@ -69,7 +69,7 @@ export async function getInfringements(nfetch: any | null): Promise<Result<Infri
 export type DronesResponse = {
 	x: number[];
 	y: number[];
-	serials: number[];
+	serials: string[];
 };
 export async function getDrones(nfetch: any | null): Promise<Result<DronesResponse, Error>> {
 	let fetch_to_use = nfetch ?? fetch;

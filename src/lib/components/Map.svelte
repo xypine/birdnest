@@ -179,8 +179,8 @@
 	}
 	.guide {
 		position: absolute;
-		bottom: 0;
-		left: 0;
+		bottom: 0.5em;
+		left: 0.5em;
 	}
 	@keyframes pulse {
 		0% {

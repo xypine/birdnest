@@ -41,7 +41,7 @@
 
 		<div class="data">
 			<h2 style="text-align:center;">
-				{infringements.length} pilots who have infringed the ndz in the last 10 minutes
+				{infringements.length} pilots have infringed the ndz in the last 10 minutes
 			</h2>
 			<h3 style="text-align:center;">click on an infringement to see more details</h3>
 			<div class="infringement label">

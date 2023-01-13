@@ -1,4 +1,4 @@
-import type { Infringement } from "$lib/reaktor/api";
+import type { Infringement } from "$lib/api/reaktor";
 
 export type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };
 export let custom_error_key = "bn_customerror?";

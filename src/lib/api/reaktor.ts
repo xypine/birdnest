@@ -1,4 +1,5 @@
 import { convertDate, getInfringementTimeLeft, type Result } from "$lib/utils";
+import { API_ENDPOINT } from ".";
 
 export type Pilot = {
 	pilot_id: string;
@@ -31,7 +32,7 @@ export async function getInfringements(nfetch: any | null): Promise<Result<Infri
 	let date_requested = new Date();
 	try {
 		let resp = await fetch_to_use(
-			`https://birdnest-api.eliaseskelinen.fi/infringements?min_updated_at=${last_updated.toISOString()}`
+			`${API_ENDPOINT}/infringements?min_updated_at=${last_updated.toISOString()}`
 		);
 		if (resp.ok) {
 			let json = await resp.json();
@@ -74,7 +75,7 @@ export type DronesResponse = {
 export async function getDrones(nfetch: any | null): Promise<Result<DronesResponse, Error>> {
 	let fetch_to_use = nfetch ?? fetch;
 	try {
-		let resp = await fetch_to_use("https://birdnest-api.eliaseskelinen.fi/drones");
+		let resp = await fetch_to_use(`${API_ENDPOINT}/drones`);
 		if (resp.ok) {
 			let json = await resp.json();
 			return {

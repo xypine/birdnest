@@ -2,10 +2,13 @@
 	import PageTransition from "$lib/components/PageTransition.svelte";
 	import "../app.css";
 	import { page } from "$app/stores";
+	import type { LayoutData } from "./$types";
+	export let data: LayoutData;
 </script>
 
 <div class="header">
 	<h1><a href="/">Birdnest</a></h1>
+	<p>api version {data.api_info.version}</p>
 	<noscript
 		><span class="warn">Data won't update automatically with javascript disabled</span></noscript
 	>

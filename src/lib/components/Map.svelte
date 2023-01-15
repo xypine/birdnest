@@ -40,7 +40,7 @@
 					in:scale|local
 					out:scale|local
 					class="drone tracked infringement"
-					style="--x:{x};--y:{y};--c:{getInfringementColorHue(i, infringements.length)};--a:{1.0 -
+					style="--x:{x};--y:{y};--c:{getInfringementColorHue(i)};--a:{1.0 -
 						getInfringementTimeLeftPercentage(i.updated_at, new Date())};"
 				>
 					<div />

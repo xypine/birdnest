@@ -1,6 +1,9 @@
 import type { Infringement } from "$lib/api/reaktor";
 
+// Convenient type to wrap functions that may error.
+// Could also use try / catch but this is more explicit
 export type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };
+// A quick hack to display more data with errors
 export let custom_error_key = "bn_customerror?";
 
 // Converts string-encoded dates to javascript date objects
@@ -11,7 +14,7 @@ export function convertDate(date: string | Date) {
 	return date;
 }
 
-export function getInfringementColorHue(i: Infringement, numInfringements: number) {
+export function getInfringementColorHue(i: Infringement) {
 	let gradient = 270 / 100.0;
 	let distance_meters = i.distance / 1000.0;
 	return gradient * distance_meters;

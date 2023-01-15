@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-import { get, writable, type Writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 let localStorageKey = "config";
 
 export type Config = {
@@ -12,6 +12,7 @@ export let default_config: Config = {
 	enable_animations: true
 };
 
+// Store that automatically syncs data to localstorage
 export let config: Writable<Config> = writable(default_config);
 export default config;
 

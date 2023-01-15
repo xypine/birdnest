@@ -2,7 +2,7 @@ import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 import { custom_error_key } from "$lib/utils";
 
-export const load: PageLoad = async ({ params, fetch, parent }) => {
+export const load: PageLoad = async ({ params, parent }) => {
 	let data = await parent();
 	if (!data.infringements.ok) {
 		throw error(500, data.infringements.error);

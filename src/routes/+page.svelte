@@ -55,10 +55,7 @@
 					{@const updated_at = infringement.updated_at}
 					{@const time_left_part = getInfringementTimeLeftPercentage(updated_at, new Date())}
 					{@const distance_meters = infringement.distance / 1000.0}
-					{@const color = `--color:hsl(${getInfringementColorHue(
-						infringement,
-						infringements.length
-					)}, 50%, 50%);`}
+					{@const color = `--color:hsl(${getInfringementColorHue(infringement)}, 50%, 50%);`}
 					<a
 						href={`/infringer/${infringement.pilot.pilot_id}`}
 						class="infringement"

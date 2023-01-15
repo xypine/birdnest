@@ -9,8 +9,8 @@ html {
 }
 @media (prefers-color-scheme: light) {
 	html {
-		--bg-0: #eee;
-		--bg-1: #fff;
+		--bg-0: #fff;
+		--bg-1: #eee;
 		--bg-2: #ebebeb;
 		--fg-0: #000;
 		--fg-1: #111;

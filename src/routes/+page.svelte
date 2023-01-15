@@ -31,7 +31,7 @@
 </script>
 
 <svelte:head>
-	<title>Birdnest</title>
+	<title>Elias's Birdnest</title>
 </svelte:head>
 
 <main>
@@ -46,8 +46,8 @@
 			<h3 style="text-align:center;">click on an infringer to see more details</h3>
 			<div class="infringement label">
 				<p>Pilot</p>
-				<p>Phone</p>
-				<p>Email</p>
+				<p class="hide-mobile">Phone</p>
+				<p class="hide-mobile">Email</p>
 				<p style="flex: 0;">Closest Distance</p>
 			</div>
 			<div class="infringement-details">
@@ -68,8 +68,8 @@
 						style={color}
 					>
 						<p>{infringement.pilot.first_name} {infringement.pilot.last_name}</p>
-						<p>{infringement.pilot.phone_number}</p>
-						<p>{infringement.pilot.email}</p>
+						<p class="hide-mobile">{infringement.pilot.phone_number}</p>
+						<p class="hide-mobile">{infringement.pilot.email}</p>
 						<p class="distance">{Math.round(distance_meters)}m</p>
 					</a>
 					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
@@ -181,5 +181,11 @@
 		padding: 0.3em 0.5em;
 		position: absolute;
 		z-index: 1;
+	}
+
+	@media (max-width: 700px) {
+		.hide-mobile {
+			display: none;
+		}
 	}
 </style>

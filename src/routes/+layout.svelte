@@ -36,6 +36,7 @@
 		border-bottom: 1px solid var(--bg-2);
 
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.5em;
 	}

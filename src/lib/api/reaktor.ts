@@ -1,6 +1,7 @@
 import { convertDate, getInfringementTimeLeft, type Result } from "$lib/utils";
-import { API_ENDPOINT } from ".";
+import { API_ENDPOINT, type OptionalFetchFunction } from ".";
 
+// Backend derived types, visit API_ENDPOINT to see up-to-date openAPI compatible definitions
 export type Pilot = {
 	pilot_id: string;
 	first_name: string;
@@ -18,6 +19,8 @@ export type Infringement = {
 	updated_at: Date;
 };
 
+// Converts all assumed string-encoded dates to javascript date objects
+// Neccessary, as JSON has no standardized date type
 function convertDates(inp: Infringement[]) {
 	for (let i of inp) {
 		i.updated_at = convertDate(i.updated_at);
@@ -25,9 +28,15 @@ function convertDates(inp: Infringement[]) {
 	}
 }
 
+// To save bandwith, we store the date of the latest received data.
+// This allows us to request only data that hasn't changed since.
+// Because of this, we have to delete expired infringements manually
 let last_updated = new Date(0, 0, 0, 0);
 let last_infringements: Infringement[] = [];
-export async function getInfringements(nfetch: any | null): Promise<Result<Infringement[], Error>> {
+export async function getInfringements(
+	nfetch: OptionalFetchFunction
+): Promise<Result<Infringement[], Error>> {
+	// If no custom fetch function was supplied, use the default "fetch"
 	let fetch_to_use = nfetch ?? fetch;
 	let date_requested = new Date();
 	try {
@@ -38,6 +47,8 @@ export async function getInfringements(nfetch: any | null): Promise<Result<Infri
 			let json = await resp.json();
 			let data: Infringement[] = json.infringements;
 			convertDates(data);
+			// Append new infringements to previously known ones,
+			// also remove expired ones
 			last_infringements = [
 				...last_infringements.filter(
 					(drone) =>
@@ -72,7 +83,10 @@ export type DronesResponse = {
 	y: number[];
 	serials: string[];
 };
-export async function getDrones(nfetch: any | null): Promise<Result<DronesResponse, Error>> {
+export async function getDrones(
+	nfetch: OptionalFetchFunction
+): Promise<Result<DronesResponse, Error>> {
+	// If no custom fetch function was supplied, use the default "fetch"
 	let fetch_to_use = nfetch ?? fetch;
 	try {
 		let resp = await fetch_to_use(`${API_ENDPOINT}/drones`);
@@ -84,10 +98,12 @@ export async function getDrones(nfetch: any | null): Promise<Result<DronesRespon
 			};
 		}
 		return {
+			// Pass http status as the error
 			ok: false,
-			error: new Error(resp.statusText)
+			error: new Error(`${resp.status}: ${resp.statusText}`)
 		};
 	} catch (e) {
+		// Most likely a network error
 		return {
 			ok: false,
 			error: e as Error

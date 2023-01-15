@@ -3,6 +3,7 @@ import type { Infringement } from "$lib/api/reaktor";
 export type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };
 export let custom_error_key = "bn_customerror?";
 
+// Converts string-encoded dates to javascript date objects
 export function convertDate(date: string | Date) {
 	if (typeof date === "string") {
 		return new Date(date);

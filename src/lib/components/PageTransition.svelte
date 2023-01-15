@@ -3,16 +3,16 @@
 	export let refresh = "";
 </script>
 
-<main>
+<div class="transition-wrapper">
 	{#key refresh}
 		<div in:fly={{ x: -10, duration: 500 }}>
 			<slot />
 		</div>
 	{/key}
-</main>
+</div>
 
 <style>
-	main {
+	.transition-wrapper {
 		overflow-x: hidden;
 	}
 </style>

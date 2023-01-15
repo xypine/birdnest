@@ -7,14 +7,15 @@ html {
 	--fg-1: #fff;
 	color-scheme: dark;
 }
-
-html.light {
-	--bg-0: #eee;
-	--bg-1: #fff;
-	--bg-2: #ebebeb;
-	--fg-0: #000;
-	--fg-1: #111;
-	color-scheme: light;
+@media (prefers-color-scheme: light) {
+	html {
+		--bg-0: #eee;
+		--bg-1: #fff;
+		--bg-2: #ebebeb;
+		--fg-0: #000;
+		--fg-1: #111;
+		color-scheme: light;
+	}
 }
 
 body {

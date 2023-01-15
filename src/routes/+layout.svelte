@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PageTransition from "$lib/components/PageTransition.svelte";
 	import "../app.css";
+	import PageTransition from "$lib/components/PageTransition.svelte";
 	import { page } from "$app/stores";
 	import type { LayoutData } from "./$types";
 	export let data: LayoutData;
@@ -13,7 +13,10 @@
 		><span class="warn">Data won't update automatically with javascript disabled</span></noscript
 	>
 	<div class="filler" />
-	<p>made by <a href="https://eliaseskelinen.fi">elias eskelinen</a></p>
+	<p>
+		<!-- svelte-ignore security-anchor-rel-noreferrer this is my website ;) -->
+		made by <a target="_blank" href="https://eliaseskelinen.fi">elias eskelinen</a>
+	</p>
 </div>
 
 <PageTransition refresh={$page.url.pathname}>

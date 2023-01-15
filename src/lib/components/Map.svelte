@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { scale } from "svelte/transition";
-	import type { DronesResponse, Infringement } from "$lib/reaktor/api";
+	import type { DronesResponse, Infringement } from "$lib/api/reaktor";
 	import { getInfringementColorHue, getInfringementTimeLeftPercentage } from "$lib/utils";
 
 	export let infringements: Infringement[];
@@ -18,13 +18,9 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<main
+<div
+	class="map"
 	style="--map-size:{size};--drone-animation-time:{enable_animations ? update_interval + 50 : 0}ms;"
-	on:click={() => {
-		// Reset page target
-		window.location.href = window.location.pathname + "#";
-		window.history.replaceState(null, "unused", window.location.pathname);
-	}}
 >
 	<div class="ndz" />
 	{#key pulse_key}
@@ -40,7 +36,7 @@
 				{@const x = i.x / oldmax}
 				{@const y = i.y / oldmax}
 				<a
-					href="#{i.drone_serial_number}"
+					href={`/infringer/${i.pilot.pilot_id}`}
 					in:scale|local
 					out:scale|local
 					class="drone tracked infringement"
@@ -58,15 +54,12 @@
 					{@const x = drones.x[index] / oldmax}
 					{@const y = drones.y[index] / oldmax}
 					{#key serial}
-						<a
-							href="#{serial}"
+						<div
 							in:scale|local
 							out:scale|local
 							class="drone tracked"
 							style="--x:{x};--y:{y};--c:{0};--a:{1.0};"
-						>
-							<div />
-						</a>
+						/>
 					{/key}
 				{/each}
 			{/if}
@@ -90,10 +83,10 @@
 		</div>
 		<p>">>=" = monadikuikka in it's natural habitat</p>
 	</div>
-</main>
+</div>
 
 <style>
-	main {
+	.map {
 		--w: var(--map-size);
 		--h: var(--map-size);
 		--ctx: calc(var(--w) / 2);

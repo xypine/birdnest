@@ -8,7 +8,7 @@
 
 <div class="header">
 	<h1><a href="/">Birdnest</a></h1>
-	<p>api version {data.api_info.version}</p>
+	<a href="/about">about</a>
 	<noscript
 		><span class="warn">Data won't update automatically with javascript disabled</span></noscript
 	>
@@ -37,15 +37,20 @@
 
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
+		align-items: stretch;
 		gap: 0.5em;
 	}
 	.header > h1 > a {
 		text-decoration: none;
 		color: inherit;
 	}
-	.header > p {
+	.header > p,
+	.header > a {
 		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1ch;
 	}
 	.header > p > a {
 		white-space: nowrap;

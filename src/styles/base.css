@@ -7,6 +7,7 @@ html {
 	--fg-1: #fff;
 	color-scheme: dark;
 }
+/* Follow the system theme on supported browsers */
 @media (prefers-color-scheme: light) {
 	html {
 		--bg-0: #fff;
@@ -31,4 +32,13 @@ h4,
 h5,
 h6 {
 	font-weight: inherit;
+}
+
+a {
+	color: inherit;
+	text-decoration: dotted underline;
+}
+
+a:hover {
+	text-decoration: solid underline;
 }

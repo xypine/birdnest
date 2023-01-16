@@ -39,9 +39,12 @@
 			<h1>{pilot.first_name}<br />{pilot.last_name}</h1>
 		</div>
 		<h2>
-			Closest distance: {distance_meters < 1
-				? `${Math.round(distance_meters * 100)} centimeters`
-				: `${Math.round(distance_meters)} meters`}
+			Closest distance:
+			<b>
+				{distance_meters < 1
+					? `${Math.round(distance_meters * 100)} centimeters`
+					: `${Math.round(distance_meters)} meters`}
+			</b>
 		</h2>
 		<hr />
 		<div class="contact">

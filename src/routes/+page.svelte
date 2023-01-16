@@ -15,6 +15,7 @@
 	}
 
 	let interval: ReturnType<typeof setInterval>;
+	// Update data every two seconds after js has loaded
 	$: if (browser && $config.interval != null) {
 		if (interval != null) {
 			clearInterval(interval);
@@ -23,6 +24,7 @@
 			interval = setInterval(rerunLoadFunction, $config.interval);
 		}
 	}
+	// Stop fetching data after user has left the page
 	onDestroy(() => {
 		if (interval != null) {
 			clearInterval(interval);
@@ -46,10 +48,11 @@
 			<h3 style="text-align:center;">click on an infringer to see more details</h3>
 			<div class="infringement label">
 				<p>Pilot</p>
-				<p class="hide-mobile">Phone</p>
-				<p class="hide-mobile">Email</p>
+				<p class="hide-small">Phone</p>
+				<p class="hide-small hide-medium">Email</p>
 				<p style="flex: 0;">Closest Distance</p>
 			</div>
+			<!-- This could have also been a table element, but "floating headers" are harder to implement for them -->
 			<div class="infringement-details">
 				{#each infringements as infringement, index (infringement.drone_serial_number)}
 					{@const updated_at = infringement.updated_at}
@@ -65,8 +68,8 @@
 						style={color}
 					>
 						<p>{infringement.pilot.first_name} {infringement.pilot.last_name}</p>
-						<p class="hide-mobile">{infringement.pilot.phone_number}</p>
-						<p class="hide-mobile">{infringement.pilot.email}</p>
+						<p class="hide-small">{infringement.pilot.phone_number}</p>
+						<p class="hide-small hide-medium">{infringement.pilot.email}</p>
 						<p class="distance">{Math.round(distance_meters)}m</p>
 					</a>
 					<div class="time-bar" style={`${color}--time:${time_left_part};`} />
@@ -172,7 +175,7 @@
 	}
 	.distance {
 		color: var(--color);
-		flex: 0;
+		flex: 0 5ch;
 	}
 	.settings {
 		padding: 0.3em 0.5em;
@@ -181,7 +184,12 @@
 	}
 
 	@media (max-width: 700px) {
-		.hide-mobile {
+		.hide-small {
+			display: none;
+		}
+	}
+	@media (max-width: 1400px) {
+		.hide-medium {
 			display: none;
 		}
 	}

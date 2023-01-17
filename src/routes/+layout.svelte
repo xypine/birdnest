@@ -51,6 +51,8 @@
 		justify-content: center;
 		align-items: center;
 		gap: 1ch;
+	}
+	.header > a {
 		font-size: 1.25em;
 	}
 	.header > p > a {

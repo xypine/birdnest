@@ -41,6 +41,7 @@
 	.buttons {
 		padding: 0.25em;
 		display: flex;
+		justify-content: center;
 		flex-wrap: wrap;
 		gap: 0.5em;
 	}

@@ -38,7 +38,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: stretch;
-		gap: 0.5em;
+		gap: 1em;
 	}
 	.header > h1 > a {
 		text-decoration: none;
@@ -51,6 +51,7 @@
 		justify-content: center;
 		align-items: center;
 		gap: 1ch;
+		font-size: 1.25em;
 	}
 	.header > p > a {
 		white-space: nowrap;

@@ -12,9 +12,13 @@
 	<div>
 		<h2>Source code:</h2>
 		<div class="buttons">
-			<a target="_blank" rel="noreferrer" href="https://github.com/xypine/birdnest">Frontend</a>
-			<a target="_blank" rel="noreferrer" href="https://github.com/xypine/birdnest-api">Backend</a>
+			<a target="_blank" rel="noreferrer" href="https://gitfront.io/r/xypine/33MpxKPkVW8A/birdnest/">Frontend</a>
+			<a target="_blank" rel="noreferrer" href="https://gitfront.io/r/xypine/kDbp8sLVp5X6/birdnest-api/">Backend</a>
 		</div>
+		<p>
+			These are mirrors of private github repositories, if, for any reason, you want access to the originals, send an email to 
+			birdnest.access@eliaseskelinen.fi
+		</p>
 	</div>
 </main>
 

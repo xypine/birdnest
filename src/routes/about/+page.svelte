@@ -16,7 +16,7 @@
 			<a target="_blank" rel="noreferrer" href="https://github.com/xypine/birdnest-api/">Backend</a>
 		</div>
 		<p>
-			These are repositories have been public since 23.1.2023
+			These repositories have been public since 23.1.2023
 		</p>
 	</div>
 </main>
